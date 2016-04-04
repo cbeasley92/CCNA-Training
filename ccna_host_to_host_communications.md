@@ -1,10 +1,12 @@
 #Host to Host Communication Model
 
 ##Introducing Host-to-Host Communications
-  *OSI
-  *TCP/IP
+  * OSI
+  * TCP/IP
 
 ##OSI Reference Model
+| OSI Stack |
+| -------------- |
 | 7 Application |
 | 6 Presentation |
 | 5 Session |
@@ -20,6 +22,8 @@
 In cmd/terminal: `netstat` shows Source/Destiation IP, MAC, and Port
 
 ##TCP/IP Protocol Suite
+| TCP/IP Stack |
+| ------------ |
 | Application |
 | Transport |
 | Internet |
