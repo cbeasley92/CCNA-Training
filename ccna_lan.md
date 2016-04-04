@@ -17,4 +17,3 @@ LAN switch characteristics
   * Fast internal switching
   * Low per-port cost
 
-
