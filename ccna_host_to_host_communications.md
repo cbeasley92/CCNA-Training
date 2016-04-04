@@ -17,10 +17,10 @@
 
 ###Packet Example:
 | Packet |
-| ------------------------------------------------------ |
+| ------ |
 | SrcIP | DestIP | SrcMAC | DestMAC | SrcPort | DestPort |
 
-###Session View Example'
+###Session View Example
 In cmd/terminal: `netstat` shows Source/Destiation IP, MAC, and Port
 
 ##TCP/IP Protocol Suite
