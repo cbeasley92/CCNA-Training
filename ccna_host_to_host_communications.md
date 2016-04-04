@@ -16,6 +16,8 @@
 | 1 Physical |
 
 ###Packet Example:
+| Packet |
+| ------------------------------------------------------ |
 | SrcIP | DestIP | SrcMAC | DestMAC | SrcPort | DestPort |
 
 ###Session View Example'
