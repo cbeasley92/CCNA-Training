@@ -1,10 +1,10 @@
-#Host to Host Communication Model
+# Host to Host Communication Model
 
-##Introducing Host-to-Host Communications
+## Introducing Host-to-Host Communications
   * OSI
   * TCP/IP
 
-##OSI Reference Model
+## OSI Reference Model
 | OSI Stack |
 | -------------- |
 | 7 Application |
@@ -15,15 +15,15 @@
 | 2 Data Link |
 | 1 Physical |
 
-###Packet Example:
+### Packet Example:
 | Packet |
 | --- | --- | --- | --- | --- | --- |
 | SrcIP | DestIP | SrcMAC | DestMAC | SrcPort | DestPort |
 
-###Session View Example
+### Session View Example
 In cmd/terminal: `netstat` shows Source/Destiation IP, MAC, and Port
 
-##TCP/IP Protocol Suite
+## TCP/IP Protocol Suite
 | TCP/IP Stack |
 | ------------ |
 | Application |
@@ -31,7 +31,7 @@ In cmd/terminal: `netstat` shows Source/Destiation IP, MAC, and Port
 | Internet |
 | Link |
 
-##Data Encapsulation
+## Data Encapsulation
 Changing from files to electormagentic pulses, transfer across cable, change back to files.
 Encapsulation and deencapsulation
 

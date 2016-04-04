@@ -1,18 +1,18 @@
-#Ethernet and Switch Operation
+# Ethernet and Switch Operation
 
-##Ethernet LAN Connection Media
+## Ethernet LAN Connection Media
   * Coaxial
   * Twisted Copper Pair
   * Fibre Optic
 
-##Ethernet Frame Structure
+## Ethernet Frame Structure
 | Typical Ethernet Frame |
 | --- | --- | --- | --- | --- | --- |
 | 8 bytes | 6 | 6 | 2 | 46-1500 | 4 |
 | Preamble | Dest Addr | Src Addr | Type | Data | FCS |
 
 
-##MAC Addresses
+## MAC Addresses
   * Unicast: 1 to 1
   * Broadcast: 1 to many
   * Multicast: many to many
