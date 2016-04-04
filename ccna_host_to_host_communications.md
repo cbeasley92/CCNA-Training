@@ -1,8 +1,8 @@
 #Host to Host Communication Model
 
 ##Introducing Host-to-Host Communications
-..*OSI
-..*TCP/IP
+  *OSI
+  *TCP/IP
 
 ##OSI Reference Model
 | 7 Application |
