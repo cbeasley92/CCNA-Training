@@ -1,0 +1,220 @@
+<<Answer for LAB 2-2: VTP>>
+
+[On Ranet SW1 (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-SW1>sh vtp status
+VTP Version                     : 2
+Configuration Revision          : 1
+Maximum VLANs supported locally : 255
+Number of existing VLANs        : 7
+VTP Operating Mode              : Server
+VTP Domain Name                 : Ranet
+VTP Pruning Mode                : Disabled
+VTP V2 Mode                     : Enabled
+VTP Traps Generation            : Disabled
+MD5 digest                      : 0x30 0x94 0xC2 0x6A 0x32 0xCF 0x82 0xFF 
+Configuration last modified by 0.0.0.0 at 3-1-93 00:41:24
+Local updater ID is 0.0.0.0 (no valid interface found)
+Ranet-SW1>sh vlan
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/3, Fa0/4, Fa0/5, Fa0/6
+                                                Fa0/7, Fa0/8, Fa0/9, Fa0/10
+                                                Fa0/11, Fa0/12, Fa0/13, Fa0/14
+                                                Fa0/15, Fa0/16, Fa0/17, Fa0/18
+                                                Fa0/19, Fa0/20, Fa0/21, Fa0/22
+                                                Fa0/23, Fa0/24, Gig1/1, Gig1/2
+10   Ranet-01                         active    Fa0/1
+20   Ranet-02                         active    Fa0/2
+1002 fddi-default                     act/unsup 
+1003 token-ring-default               act/unsup 
+1004 fddinet-default                  act/unsup 
+1005 trnet-default                    act/unsup 
+
+VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
+---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
+1    enet  100001     1500  -      -      -        -    -        0      0
+10   enet  100010     1500  -      -      -        -    -        0      0
+20   enet  100020     1500  -      -      -        -    -        0      0
+1002 fddi  101002     1500  -      -      -        -    -        0      0   
+1003 tr    101003     1500  -      -      -        -    -        0      0   
+1004 fdnet 101004     1500  -      -      -        ieee -        0      0   
+1005 trnet 101005     1500  -      -      -        ibm  -        0      0   
+
+Remote SPAN VLANs
+------------------------------------------------------------------------------
+
+
+Primary Secondary Type              Ports
+------- --------- ----------------- ------------------------------------------
+Ranet-SW1>
+
+[On Ranet SW2 (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-SW2>en
+Ranet-SW2#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-SW2(config)#vtp mode transparent 
+Setting device to VTP TRANSPARENT mode.
+Ranet-SW2(config)#vtp domain Ranet
+Changing VTP domain name from NULL to Ranet
+Ranet-SW2(config)#vtp version 2
+Ranet-SW2(config)#int gig1/1
+Ranet-SW2(config-if)#switchport mode trunk 
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/1, changed state to down
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/1, changed state to up
+Ranet-SW2(config-if)#
+Ranet-SW2#
+%SYS-5-CONFIG_I: Configured from console by console
+Ranet-SW2#sh vtp status
+VTP Version                     : 2
+Configuration Revision          : 0
+Maximum VLANs supported locally : 255
+Number of existing VLANs        : 7
+VTP Operating Mode              : Transparent
+VTP Domain Name                 : Ranet
+VTP Pruning Mode                : Disabled
+VTP V2 Mode                     : Enabled
+VTP Traps Generation            : Disabled
+MD5 digest                      : 0x39 0x70 0x66 0x32 0x4F 0x8F 0x84 0x33 
+Configuration last modified by 0.0.0.0 at 3-1-93 00:14:20
+Ranet-SW2#sh vlan
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/3, Fa0/4, Fa0/5, Fa0/6
+                                                Fa0/7, Fa0/8, Fa0/9, Fa0/10
+                                                Fa0/11, Fa0/12, Fa0/13, Fa0/14
+                                                Fa0/15, Fa0/16, Fa0/17, Fa0/18
+                                                Fa0/19, Fa0/20, Fa0/21, Fa0/22
+                                                Fa0/23, Fa0/24, Gig1/2
+30   Ranet-03                         active    Fa0/1
+40   Ranet-04                         active    Fa0/2
+1002 fddi-default                     act/unsup 
+1003 token-ring-default               act/unsup 
+1004 fddinet-default                  act/unsup 
+1005 trnet-default                    act/unsup 
+
+VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
+---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
+1    enet  100001     1500  -      -      -        -    -        0      0
+30   enet  100030     1500  -      -      -        -    -        0      0
+40   enet  100040     1500  -      -      -        -    -        0      0
+1002 fddi  101002     1500  -      -      -        -    -        0      0   
+
+Ranet-SW2#sh inter
+Ranet-SW2#sh interfaces trunk
+Port        Mode         Encapsulation  Status        Native vlan
+Gig1/1      on           802.1q         trunking      1
+
+Port        Vlans allowed on trunk
+Gig1/1      1-1005
+
+Port        Vlans allowed and active in management domain
+Gig1/1      1,30,40
+
+Port        Vlans in spanning tree forwarding state and not pruned
+Gig1/1      none
+Ranet-SW2#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+Ranet-SW2#
+
+[On Ranet SW3 (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-SW3>en
+Ranet-SW3#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-SW3(config)#vtp mode transparent 
+Setting device to VTP TRANSPARENT mode.
+Ranet-SW3(config)#vtp domain Ranet
+Changing VTP domain name from NULL to Ranet
+Ranet-SW3(config)#vtp mode client 
+Setting device to VTP CLIENT mode.
+Ranet-SW3(config)#int gig1/1
+Ranet-SW3(config-if)#switchport mode trunk 
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/1, changed state to down
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/1, changed state to up
+Ranet-SW3(config-if)#
+Ranet-SW3#
+%SYS-5-CONFIG_I: Configured from console by console
+Ranet-SW3#sh vtp status
+VTP Version                     : 2
+Configuration Revision          : 1
+Maximum VLANs supported locally : 255
+Number of existing VLANs        : 7
+VTP Operating Mode              : Client
+VTP Domain Name                 : Ranet
+VTP Pruning Mode                : Disabled
+VTP V2 Mode                     : Enabled
+VTP Traps Generation            : Disabled
+MD5 digest                      : 0x30 0x94 0xC2 0x6A 0x32 0xCF 0x82 0xFF 
+Configuration last modified by 0.0.0.0 at 3-1-93 00:41:24
+Ranet-SW3#sh vlan
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/1, Fa0/2, Fa0/3, Fa0/4
+                                                Fa0/5, Fa0/6, Fa0/7, Fa0/8
+                                                Fa0/9, Fa0/10, Fa0/11, Fa0/12
+                                                Fa0/13, Fa0/14, Fa0/15, Fa0/16
+                                                Fa0/17, Fa0/18, Fa0/19, Fa0/20
+                                                Fa0/21, Fa0/22, Fa0/23, Fa0/24
+                                                Gig1/2
+10   Ranet-01                         active    
+20   Ranet-02                         active    
+1002 fddi-default                     act/unsup 
+1003 token-ring-default               act/unsup 
+1004 fddinet-default                  act/unsup 
+1005 trnet-default                    act/unsup 
+
+VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
+---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
+1    enet  100001     1500  -      -      -        -    -        0      0
+10   enet  100010     1500  -      -      -        -    -        0      0
+20   enet  100020     1500  -      -      -        -    -        0      0
+
+Ranet-SW3#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-SW3(config)#int fa0/1
+Ranet-SW3(config-if)#switchport mode access 
+Ranet-SW3(config-if)#switchport access vlan 10
+Ranet-SW3(config-if)#int fa0/2
+Ranet-SW3(config-if)#switchport mode access 
+Ranet-SW3(config-if)#switchport access vlan 20
+Ranet-SW3(config-if)#
+Ranet-SW3#
+%SYS-5-CONFIG_I: Configured from console by console
+Ranet-SW3#sh vlan
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/3, Fa0/4, Fa0/5, Fa0/6
+                                                Fa0/7, Fa0/8, Fa0/9, Fa0/10
+                                                Fa0/11, Fa0/12, Fa0/13, Fa0/14
+                                                Fa0/15, Fa0/16, Fa0/17, Fa0/18
+                                                Fa0/19, Fa0/20, Fa0/21, Fa0/22
+                                                Fa0/23, Fa0/24, Gig1/2
+10   Ranet-01                         active    Fa0/1
+20   Ranet-02                         active    Fa0/2
+1002 fddi-default                     act/unsup 
+1003 token-ring-default               act/unsup 
+1004 fddinet-default                  act/unsup 
+1005 trnet-default                    act/unsup 
+
+VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
+---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
+1    enet  100001     1500  -      -      -        -    -        0      0
+10   enet  100010     1500  -      -      -        -    -        0      0
+20   enet  100020     1500  -      -      -        -    -        0      0
+1002 fddi  101002     1500  -      -      -        -    -        0      0   
+
+Ranet-SW3#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+Ranet-SW3#

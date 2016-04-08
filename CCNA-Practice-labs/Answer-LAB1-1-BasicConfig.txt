@@ -1,0 +1,54 @@
+<<Answer for LAB 1-1: Basic Configuration>>
+
+[On Ranet A (via console)] :
+(Go to Desktop Tab > Terminal)
+Router>en
+Router#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Router(config)#hostname RanetA
+RanetA(config)#enable secret ranetenablepass
+RanetA(config)#line con 0
+RanetA(config-line)#password ranetconsolepass
+RanetA(config-line)#login
+RanetA(config-line)#line vty 0 4
+RanetA(config-line)#password ranettelnetpass
+RanetA(config-line)#login
+RanetA(config-line)#int fa0/0
+RanetA(config-if)#no sh
+
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+RanetA(config-if)#ip add 10.0.0.1 255.255.255.252
+RanetA(config-if)#int fa0/1
+RanetA(config-if)#no sh
+
+%LINK-5-CHANGED: Interface FastEthernet0/1, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/1, changed state to up
+RanetA(config-if)#ip add 192.168.0.254 255.255.255.192
+RanetA(config-if)#
+RanetA#
+%SYS-5-CONFIG_I: Configured from console by console
+RanetA#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+RanetA#ping 10.0.0.2
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.0.0.2, timeout is 2 seconds:
+.!!!!
+Success rate is 80 percent (4/5), round-trip min/avg/max = 2/3/5 ms
+
+RanetA#
+
+[On Ranet PC] :
+(Go to Desktop Tab > Command Prompt)
+Packet Tracer PC Command Line 1.0
+PC>telnet 192.168.0.254
+Trying 192.168.0.254 ...Open
+
+
+User Access Verification
+
+Password: ranettelnetpass
+RanetA>

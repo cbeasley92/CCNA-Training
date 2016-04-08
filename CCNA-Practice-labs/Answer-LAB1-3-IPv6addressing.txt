@@ -1,0 +1,73 @@
+<<Answer for LAB 1-3: IPv6addressing>>
+
+[On Ranet HQ (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-HQ>en
+Ranet-HQ#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-HQ(config)#ipv6 unicast-routing 
+Ranet-HQ(config)#int s0/0/0
+Ranet-HQ(config-if)#ipv6 add FEC0:78:0:1::2/64
+Ranet-HQ(config-if)#no sh
+
+%LINK-5-CHANGED: Interface Serial0/0/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/0/0, changed state to up
+Ranet-HQ(config-if)#int s0/1/0
+Ranet-HQ(config-if)#no sh
+
+%LINK-5-CHANGED: Interface Serial0/1/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/1/0, changed state to up
+Ranet-HQ(config-if)#ipv6 add 2001:21::2/48
+Ranet-HQ(config-if)#int fa0/0
+Ranet-HQ(config-if)#no sh
+
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+Ranet-HQ(config-if)#ipv6 add FEC0:78:0:2::/64 eui-64 
+Ranet-HQ(config-if)#ipv6 add 2001:22::/48 eui-64 
+Ranet-HQ(config-if)#
+
+%SYS-5-CONFIG_I: Configured from console by consoleRanet-HQ#
+Ranet-HQ#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+Ranet-HQ#
+
+[On Host1 (local)] :
+(Go to Desktop Tab > Command Prompt)
+Packet Tracer PC Command Line 1.0
+PC>ping FEC0:78:0:1::1
+
+Pinging FEC0:78:0:1::1 with 32 bytes of data:
+
+Reply from FEC0:78:0:1::1: bytes=32 time=29ms TTL=254
+Reply from FEC0:78:0:1::1: bytes=32 time=11ms TTL=254
+Reply from FEC0:78:0:1::1: bytes=32 time=13ms TTL=254
+Reply from FEC0:78:0:1::1: bytes=32 time=11ms TTL=254
+
+Ping statistics for FEC0:78:0:1::1:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 11ms, Maximum = 29ms, Average = 16ms
+
+PC>
+
+[On Host2 (global)] :
+(Go to Desktop Tab > Command Prompt)
+Packet Tracer PC Command Line 1.0
+PC>ping 2001:21::1
+
+Pinging 2001:21::1 with 32 bytes of data:
+
+Reply from 2001:21::1: bytes=32 time=21ms TTL=254
+Reply from 2001:21::1: bytes=32 time=13ms TTL=254
+Reply from 2001:21::1: bytes=32 time=9ms TTL=254
+Reply from 2001:21::1: bytes=32 time=13ms TTL=254
+
+Ping statistics for 2001:21::1:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 9ms, Maximum = 21ms, Average = 14ms
+
+PC>

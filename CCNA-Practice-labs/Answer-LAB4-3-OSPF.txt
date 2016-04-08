@@ -1,0 +1,205 @@
+<<Answer for LAB 4-3: OSPF>>
+
+[On Ranet  HQ (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-HQ>en
+Ranet-HQ#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-HQ(config)#int fa0/0
+Ranet-HQ(config-if)#no sh
+
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+Ranet-HQ(config-if)#ip add 128.0.6.142 255.255.255.240
+Ranet-HQ(config-if)#int s0/0/0
+Ranet-HQ(config-if)#no sh
+
+%LINK-5-CHANGED: Interface Serial0/0/0, changed state to down
+Ranet-HQ(config-if)#ip add 128.0.6.157 255.255.255.252
+Ranet-HQ(config-if)#int s0/1/0
+Ranet-HQ(config-if)#no sh
+
+Ranet-HQ(config-if)#
+%LINK-5-CHANGED: Interface Serial0/1/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/1/0, changed state to up
+Ranet-HQ(config-if)#ip add 128.0.6.94 255.255.255.252
+Ranet-HQ(config-if)#exit
+Ranet-HQ(config)#int loopback 0
+
+%LINK-5-CHANGED: Interface Loopback0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Loopback0, changed state to up
+Ranet-HQ(config-if)#ip add 1.1.0.1 255.255.255.0
+Ranet-HQ(config-if)#exit
+Ranet-HQ(config)#router ospf 1
+Ranet-HQ(config-router)#network 128.0.6.128 0.0.0.15 area 0
+Ranet-HQ(config-router)#network 128.0.6.156 0.0.0.3 area 0
+Ranet-HQ(config-router)#exit
+Ranet-HQ(config)#ip route 0.0.0.0 0.0.0.0 se0/1/0
+Ranet-HQ(config)#
+Ranet-HQ#
+%SYS-5-CONFIG_I: Configured from console by console
+Ranet-HQ#sh ip protocol
+
+Routing Protocol is "ospf 1"
+  Outgoing update filter list for all interfaces is not set 
+  Incoming update filter list for all interfaces is not set 
+  Router ID 1.1.0.1
+  Number of areas in this router is 1. 1 normal 0 stub 0 nssa
+  Maximum path: 4
+  Routing for Networks:
+    128.0.6.128 0.0.0.15 area 0
+    128.0.6.156 0.0.0.3 area 0
+  Routing Information Sources:  
+    Gateway         Distance      Last Update 
+  Distance: (default is 110)
+
+Ranet-HQ#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+Ranet-HQ#
+
+[On Ranet  BR (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-BR>en
+Ranet-BR#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-BR(config)#int fa0/0
+Ranet-BR(config-if)#no sh
+
+Ranet-BR(config-if)#
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+Ranet-BR(config-if)#ip add 128.0.6.150 255.255.255.248
+Ranet-BR(config-if)#int s0/0/0
+Ranet-BR(config-if)#no sh
+
+%LINK-5-CHANGED: Interface Serial0/0/0, changed state to up
+Ranet-BR(config-if)#clock rate 64000
+Ranet-BR(config-if)#
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/0/0, changed state to up
+Ranet-BR(config-if)#ip add 128.0.6.158 255.255.255.252
+Ranet-BR(config-if)#exit
+Ranet-BR(config)#int loopback 0
+
+%LINK-5-CHANGED: Interface Loopback0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Loopback0, changed state to up
+Ranet-BR(config-if)#ip add 1.1.1.1 255.255.255.0
+Ranet-BR(config-if)#exit
+Ranet-BR(config)#router ospf 100
+Ranet-BR(config-router)#network 128.0.6.144 0.0.0.7 area 0
+Ranet-BR(config-router)#network 128.0.6.156 0.0.0.3 area 0
+Ranet-BR(config-router)#
+00:06:09: %OSPF-5-ADJCHG: Process 100, Nbr 1.1.0.1 on Serial0/0/0 from LOADING to FULL, Loading Done
+Ranet-BR(config-router)#exit
+Ranet-BR(config)#ip route 0.0.0.0 0.0.0.0 se0/0/0
+Ranet-BR(config)#
+Ranet-BR#
+%SYS-5-CONFIG_I: Configured from console by console
+Ranet-BR#sh ip protocol
+
+Routing Protocol is "ospf 100"
+  Outgoing update filter list for all interfaces is not set 
+  Incoming update filter list for all interfaces is not set 
+  Router ID 1.1.1.1
+  Number of areas in this router is 1. 1 normal 0 stub 0 nssa
+  Maximum path: 4
+  Routing for Networks:
+    128.0.6.144 0.0.0.7 area 0
+    128.0.6.156 0.0.0.3 area 0
+  Routing Information Sources:  
+    Gateway         Distance      Last Update 
+    128.0.6.157          110      00:00:20
+  Distance: (default is 110)
+
+Ranet-BR#sh ip route
+Codes: C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
+       * - candidate default, U - per-user static route, o - ODR
+       P - periodic downloaded static route
+
+Gateway of last resort is 0.0.0.0 to network 0.0.0.0
+
+     1.0.0.0/24 is subnetted, 1 subnets
+C       1.1.1.0 is directly connected, Loopback0
+     128.0.0.0/16 is variably subnetted, 3 subnets, 3 masks
+O       128.0.6.128/28 [110/782] via 128.0.6.157, 00:00:29, Serial0/0/0
+C       128.0.6.144/29 is directly connected, FastEthernet0/0
+C       128.0.6.156/30 is directly connected, Serial0/0/0
+S*   0.0.0.0/0 is directly connected, Serial0/0/0
+Ranet-BR#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+Ranet-BR#
+
+[On Host1] :
+(Go to Desktop Tab > Command Prompt)
+
+Packet Tracer PC Command Line 1.0
+PC>ping 128.0.6.148
+
+Pinging 128.0.6.148 with 32 bytes of data:
+
+Request timed out.
+Reply from 128.0.6.148: bytes=32 time=11ms TTL=126
+Reply from 128.0.6.148: bytes=32 time=12ms TTL=126
+Reply from 128.0.6.148: bytes=32 time=8ms TTL=126
+
+Ping statistics for 128.0.6.148:
+    Packets: Sent = 4, Received = 3, Lost = 1 (25% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 8ms, Maximum = 12ms, Average = 10ms
+
+PC>ping 203.87.129.95
+
+Pinging 203.87.129.95 with 32 bytes of data:
+
+Request timed out.
+Reply from 203.87.129.95: bytes=32 time=10ms TTL=126
+Reply from 203.87.129.95: bytes=32 time=8ms TTL=126
+Reply from 203.87.129.95: bytes=32 time=10ms TTL=126
+
+Ping statistics for 203.87.129.95:
+    Packets: Sent = 4, Received = 3, Lost = 1 (25% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 8ms, Maximum = 10ms, Average = 9ms
+
+PC>
+
+[On Host2] :
+(Go to Desktop Tab > Command Prompt)
+
+Packet Tracer PC Command Line 1.0
+PC>ping 128.0.6.130
+
+Pinging 128.0.6.130 with 32 bytes of data:
+
+Reply from 128.0.6.130: bytes=32 time=17ms TTL=126
+Reply from 128.0.6.130: bytes=32 time=14ms TTL=126
+Reply from 128.0.6.130: bytes=32 time=12ms TTL=126
+Reply from 128.0.6.130: bytes=32 time=12ms TTL=126
+
+Ping statistics for 128.0.6.130:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 12ms, Maximum = 17ms, Average = 13ms
+
+PC>ping 203.87.129.95
+
+Pinging 203.87.129.95 with 32 bytes of data:
+
+Reply from 203.87.129.95: bytes=32 time=24ms TTL=125
+Reply from 203.87.129.95: bytes=32 time=16ms TTL=125
+Reply from 203.87.129.95: bytes=32 time=17ms TTL=125
+Reply from 203.87.129.95: bytes=32 time=12ms TTL=125
+
+Ping statistics for 203.87.129.95:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 12ms, Maximum = 24ms, Average = 17ms
+
+PC>

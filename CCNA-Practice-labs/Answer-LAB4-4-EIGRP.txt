@@ -1,0 +1,205 @@
+<<Answer for LAB 4-4: EIGRP>>
+
+[On Ranet  HQ (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-HQ>en
+Ranet-HQ#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-HQ(config)#int fa0/0
+Ranet-HQ(config-if)#no sh
+
+
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up Ranet-HQ(config-if)#ip add 5.88.192.54 255.255.255.248
+Ranet-HQ(config-if)#int s0/0/0
+Ranet-HQ(config-if)#no sh
+
+%LINK-5-CHANGED: Interface Serial0/0/0, changed state to down
+Ranet-HQ(config-if)#ip add 5.88.192.57 255.255.255.248
+Ranet-HQ(config-if)#int s0/0/0
+Ranet-HQ(config-if)#int s0/1/0
+Ranet-HQ(config-if)#no sh
+
+%LINK-5-CHANGED: Interface Serial0/1/0, changed state to up
+Ranet-HQ(config-if)#
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/1/0, changed state to up
+Ranet-HQ(config-if)#ip add 5.88.192.226 255.255.255.252
+Ranet-HQ(config-if)#exit
+Ranet-HQ(config)#router eigrp 10110
+Ranet-HQ(config-router)#network 5.88.192.48 0.0.0.7
+Ranet-HQ(config-router)#network 5.88.192.56 0.0.0.7
+Ranet-HQ(config-router)#no auto-summary
+Ranet-HQ(config-router)#exit
+Ranet-HQ(config)#ip route 0.0.0.0 0.0.0.0 se0/1/0
+Ranet-HQ(config)#
+Ranet-HQ#
+%SYS-5-CONFIG_I: Configured from console by console
+Ranet-HQ#sh ip protocol
+
+Routing Protocol is "eigrp  10110 " 
+  Outgoing update filter list for all interfaces is not set 
+  Incoming update filter list for all interfaces is not set 
+  Default networks flagged in outgoing updates  
+  Default networks accepted from incoming updates 
+  EIGRP metric weight K1=1, K2=0, K3=1, K4=0, K5=0
+  EIGRP maximum hopcount 100
+  EIGRP maximum metric variance 1
+Redistributing: eigrp 10110
+  Automatic network summarization is not in effect  
+  Maximum path: 4
+  Routing for Networks:  
+     5.88.192.48/29
+     5.88.192.56/29
+  Routing Information Sources:  
+    Gateway         Distance      Last Update 
+  Distance: internal 90 external 170
+
+Ranet-HQ#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+Ranet-HQ#
+
+[On Ranet  BR (via console)] :
+(Go to Desktop Tab > Terminal)
+
+Ranet-BR>en
+Ranet-BR#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-BR(config)#int fa0/0
+Ranet-BR(config-if)#no sh
+
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+Ranet-BR(config-if)#ip add 5.88.192.46 255.255.255.240
+Ranet-BR(config-if)#int s0/0/0
+Ranet-BR(config-if)#no sh
+
+Ranet-BR(config-if)#
+%LINK-5-CHANGED: Interface Serial0/0/0, changed state to up
+Ranet-BR(config-if)#clock rate 64000
+Ranet-BR(config-if)#
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/0/0, changed state to up
+Ranet-BR(config-if)#ip add 5.88.192.62 255.255.255.248
+Ranet-BR(config-if)#exit
+Ranet-BR(config)#router eigrp 10110
+Ranet-BR(config-router)#network 5.88.192.32 0.0.0.15
+Ranet-BR(config-router)#network 5.88.192.56 0.0.0.3
+Ranet-BR(config-router)#
+%DUAL-5-NBRCHANGE: IP-EIGRP 10110: Neighbor 5.88.192.57 (Serial0/0/0) is up: new adjacency
+Ranet-BR(config-router)#no auto-summary
+Ranet-BR(config-router)#
+%DUAL-5-NBRCHANGE: IP-EIGRP 10110: Neighbor 5.88.192.57 (Serial0/0/0) is up: new adjacency
+Ranet-BR(config-router)#exit
+Ranet-BR(config)#ip route 0.0.0.0 0.0.0.0 se0/0/0
+Ranet-BR(config)#
+Ranet-BR#
+%SYS-5-CONFIG_I: Configured from console by console
+Ranet-BR#sh ip protocol
+
+Routing Protocol is "eigrp  10110 " 
+  Outgoing update filter list for all interfaces is not set 
+  Incoming update filter list for all interfaces is not set 
+  Default networks flagged in outgoing updates  
+  Default networks accepted from incoming updates 
+  EIGRP metric weight K1=1, K2=0, K3=1, K4=0, K5=0
+  EIGRP maximum hopcount 100
+  EIGRP maximum metric variance 1
+Redistributing: eigrp 10110
+  Automatic network summarization is not in effect  
+  Maximum path: 4
+  Routing for Networks:  
+     5.88.192.32/28
+     5.88.192.56/30
+  Routing Information Sources:  
+    Gateway         Distance      Last Update 
+    5.88.192.57     90            497401     
+  Distance: internal 90 external 170
+Ranet-BR#sh ip route
+Codes: C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
+       * - candidate default, U - per-user static route, o - ODR
+       P - periodic downloaded static route
+
+Gateway of last resort is 0.0.0.0 to network 0.0.0.0
+
+     5.0.0.0/8 is variably subnetted, 3 subnets, 2 masks
+C       5.88.192.32/28 is directly connected, FastEthernet0/0
+D       5.88.192.48/29 [90/20514560] via 5.88.192.57, 00:00:53, Serial0/0/0
+C       5.88.192.56/29 is directly connected, Serial0/0/0
+S*   0.0.0.0/0 is directly connected, Serial0/0/0
+Ranet-BR#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+Ranet-BR#
+
+[On Host1] :
+(Go to Desktop Tab > Command Prompt)
+Packet Tracer PC Command Line 1.0
+PC>ping 5.88.192.40
+
+Pinging 5.88.192.40 with 32 bytes of data:
+
+Request timed out.
+Reply from 5.88.192.40: bytes=32 time=10ms TTL=126
+Reply from 5.88.192.40: bytes=32 time=15ms TTL=126
+Reply from 5.88.192.40: bytes=32 time=17ms TTL=126
+
+Ping statistics for 5.88.192.40:
+    Packets: Sent = 4, Received = 3, Lost = 1 (25% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 10ms, Maximum = 17ms, Average = 14ms
+
+PC>ping 177.87.0.39
+
+Pinging 177.87.0.39 with 32 bytes of data:
+
+Request timed out.
+Reply from 177.87.0.39: bytes=32 time=14ms TTL=126
+Reply from 177.87.0.39: bytes=32 time=12ms TTL=126
+Reply from 177.87.0.39: bytes=32 time=23ms TTL=126
+
+Ping statistics for 177.87.0.39:
+    Packets: Sent = 4, Received = 3, Lost = 1 (25% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 12ms, Maximum = 23ms, Average = 16ms
+
+PC>
+
+[On Host2] :
+(Go to Desktop Tab > Command Prompt)
+
+Packet Tracer PC Command Line 1.0
+PC>ping 5.88.192.32
+
+Pinging 5.88.192.32 with 32 bytes of data:
+
+Reply from 5.88.192.46: bytes=32 time=5ms TTL=255
+Reply from 5.88.192.46: bytes=32 time=2ms TTL=255
+Reply from 5.88.192.46: bytes=32 time=22ms TTL=255
+Reply from 5.88.192.46: bytes=32 time=4ms TTL=255
+
+Ping statistics for 5.88.192.46:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 22ms, Maximum = 23ms, Average = 22ms
+
+PC>ping 177.87.0.39
+
+Pinging 177.87.0.39 with 32 bytes of data:
+
+Reply from 177.87.0.39: bytes=32 time=22ms TTL=125
+Reply from 177.87.0.39: bytes=32 time=23ms TTL=125
+Reply from 177.87.0.39: bytes=32 time=23ms TTL=125
+Reply from 177.87.0.39: bytes=32 time=22ms TTL=125
+
+Ping statistics for 177.87.0.39:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 22ms, Maximum = 23ms, Average = 22ms
+
+PC>

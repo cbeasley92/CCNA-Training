@@ -1,0 +1,119 @@
+<<Answer for LAB 3-4: Frame Relay-P2P>>
+
+[On Ranet  HQ (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-HQ>en
+Ranet-HQ#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-HQ(config)#int fa0/0
+Ranet-HQ(config-if)#no sh
+
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+Ranet-HQ(config-if)#ip add 172.20.8.1 255.255.255.240
+Ranet-HQ(config-if)#int s0/0/0
+Ranet-HQ(config-if)#no sh
+
+%LINK-5-CHANGED: Interface Serial0/0/0, changed state to up
+Ranet-HQ(config-if)#encapsulation frame-relay 
+Ranet-HQ(config-if)#
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/0/0, changed state to up
+Ranet-HQ(config-if)#int s0/0/0.2 point-to-point 
+
+%LINK-5-CHANGED: Interface Serial0/0/0.2, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/0/0.2, changed state to up
+Ranet-HQ(config-subif)#frame-relay interface-dlci 902
+Ranet-HQ(config-subif)#ip add 10.0.2.1 255.255.255.252
+Ranet-HQ(config-if)#int s0/0/0.3 point-to-point 
+Ranet-HQ(config-subif)#
+%LINK-5-CHANGED: Interface Serial0/0/0.3, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/0/0.3, changed state to up
+Ranet-HQ(config-subif)#frame-relay interface-dlci 903
+Ranet-HQ(config-subif)#ip add 10.0.3.1 255.255.255.252
+Ranet-HQ(config-subif)#int s0/0/0.4 point-to-point
+
+%LINK-5-CHANGED: Interface Serial0/0/0.4, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/0/0.4, changed state to up
+Ranet-HQ(config-subif)#frame-relay interface-dlci 904
+Ranet-HQ(config-subif)#ip add 10.0.4.1 255.255.255.252
+Ranet-HQ(config-subif)#
+Ranet-HQ#
+%SYS-5-CONFIG_I: Configured from console by console
+Ranet-HQ#sh frame-relay map
+Serial0/0/0.2 (up): point-to-point dlci, dlci 902, broadcast, status defined, active
+Serial0/0/0.3 (up): point-to-point dlci, dlci 903, broadcast, status defined, active
+Serial0/0/0.4 (up): point-to-point dlci, dlci 904, broadcast, status defined, active
+Ranet-HQ#ping 172.20.8.30
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 172.20.8.30, timeout is 2 seconds:
+.!!!!
+Success rate is 80 percent (4/5), round-trip min/avg/max = 4/9/12 ms
+
+Ranet-HQ#ping 172.20.8.40
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 172.20.8.40, timeout is 2 seconds:
+.!!!!
+Success rate is 80 percent (4/5), round-trip min/avg/max = 10/12/16 ms
+
+Ranet-HQ#ping 172.20.8.60
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 172.20.8.60, timeout is 2 seconds:
+.!!!!
+Success rate is 80 percent (4/5), round-trip min/avg/max = 11/12/13 ms
+
+Ranet-HQ#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+Ranet-HQ#
+
+[On Host1] :
+(Go to Desktop Tab > Command Prompt)
+
+Packet Tracer PC Command Line 1.0
+PC>ping 172.20.8.30
+
+Pinging 172.20.8.30 with 32 bytes of data:
+
+Reply from 172.20.8.30: bytes=32 time=15ms TTL=126
+Reply from 172.20.8.30: bytes=32 time=8ms TTL=126
+Reply from 172.20.8.30: bytes=32 time=18ms TTL=126
+Reply from 172.20.8.30: bytes=32 time=14ms TTL=126
+
+Ping statistics for 172.20.8.30:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 8ms, Maximum = 18ms, Average = 13ms
+
+PC>ping 172.20.8.40
+
+Pinging 172.20.8.40 with 32 bytes of data:
+
+Reply from 172.20.8.40: bytes=32 time=16ms TTL=126
+Reply from 172.20.8.40: bytes=32 time=15ms TTL=126
+Reply from 172.20.8.40: bytes=32 time=16ms TTL=126
+Reply from 172.20.8.40: bytes=32 time=14ms TTL=126
+
+Ping statistics for 172.20.8.40:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 14ms, Maximum = 16ms, Average = 15ms
+
+PC>ping 172.20.8.60
+
+Pinging 172.20.8.60 with 32 bytes of data:
+
+Reply from 172.20.8.60: bytes=32 time=13ms TTL=126
+Reply from 172.20.8.60: bytes=32 time=17ms TTL=126
+Reply from 172.20.8.60: bytes=32 time=17ms TTL=126
+Reply from 172.20.8.60: bytes=32 time=10ms TTL=126
+
+Ping statistics for 172.20.8.60:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 10ms, Maximum = 17ms, Average = 14ms
+
+PC>

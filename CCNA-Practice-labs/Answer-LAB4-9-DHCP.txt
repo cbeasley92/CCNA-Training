@@ -1,0 +1,53 @@
+<<Answer for LAB 4-9: DHCP>>
+
+[On Ranet  GW (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-GW>en
+Ranet-GW#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-GW(config)#int fa0/0
+Ranet-GW(config-if)#no sh
+
+Ranet-GW(config-if)#
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+Ranet-GW(config-if)#ip add 10.0.0.129 255.255.255.240
+Ranet-GW(config-if)#int s0/0/0
+Ranet-GW(config-if)#no sh
+
+%LINK-5-CHANGED: Interface Serial0/0/0, changed state to up
+Ranet-GW(config-if)#
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/0/0, changed state to up
+Ranet-GW(config-if)#ip add 77.8.210.2 255.255.255.252
+Ranet-GW(config-if)#exit
+Ranet-GW(config)#ip route 0.0.0.0 0.0.0.0 se0/0/0
+Ranet-GW(config)#int fa0/0
+Ranet-GW(config-if)#ip nat inside
+Ranet-GW(config-if)#int se0/0/0
+Ranet-GW(config-if)#ip nat outside
+Ranet-GW(config-if)#exit
+Ranet-GW(config)#access-list 1 permit 10.0.0.128 0.0.0.15
+Ranet-GW(config)#ip nat pool Ranet 19.5.39.129 19.5.39.130 ne
+Ranet-GW(config)#ip nat pool Ranet 19.5.39.129 19.5.39.130 netmask 255.255.255.252
+Ranet-GW(config)#ip nat inside source list 1 pool Ranet overload 
+Ranet-GW(config)#ip dhcp pool Ranet
+Ranet-GW(dhcp-config)#network 10.0.0.128 255.255.255.240
+Ranet-GW(dhcp-config)#default-router 10.0.0.129
+Ranet-GW(dhcp-config)#dns-server 77.8.209.5
+Ranet-GW(dhcp-config)#exit
+Ranet-GW(config)#ip dhcp excluded-address 10.0.0.129 10.0.0.130
+Ranet-GW(config)#
+Ranet-GW#
+%SYS-5-CONFIG_I: Configured from console by console
+Ranet-GW#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+Ranet-GW#
+
+[On Host1, Host2, Host3] :
+(Go to Desktop Tab > IP Configuration)
+<If host is not received address properly, try to refresh by switch between Static-DHCP>
+(Go to Desktop Tab > Web Browser)
+URL: www.ranet.co.th
+Output: Ranet Co.,Ltd. - Welcome to Ranet Co,,Ltd. - Congratulations! you have finished this LAB.

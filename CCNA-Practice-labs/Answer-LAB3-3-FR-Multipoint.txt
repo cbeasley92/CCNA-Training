@@ -1,0 +1,131 @@
+<<Answer for LAB 3-3: Frame Relay-Multipoint>>
+
+[On Ranet  HQ (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-HQ>en
+Ranet-HQ#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-HQ(config)#int fa0/0
+Ranet-HQ(config-if)#no sh
+
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+Ranet-HQ(config-if)#ip add 192.168.0.73 255.255.255.248
+Ranet-HQ(config-if)#int s0/0/0
+Ranet-HQ(config-if)#no sh
+
+%LINK-5-CHANGED: Interface Serial0/0/0, changed state to up
+Ranet-HQ(config-if)#ip add 10.0.0.1 255.255.255.248
+Ranet-HQ(config-if)#encapsulation frame-relay ietf 
+Ranet-HQ(config-if)#frame-relay lmi-type ansi
+Ranet-HQ(config-if)#
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/0/0, changed state to up
+Ranet-HQ(config-if)#
+
+%SYS-5-CONFIG_I: Configured from console by consoleRanet-HQ#
+Ranet-HQ#ping 192.168.0.123
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.0.123, timeout is 2 seconds:
+.!!!!
+Success rate is 80 percent (4/5), round-trip min/avg/max = 11/12/13 ms
+
+Ranet-HQ#sh frame-relay map
+Serial0/0/0 (up): ip 10.0.0.4 dlci 104, dynamic, broadcast, IETF, status defined, active
+Serial0/0/0 (up): ip 10.0.0.2 dlci 102, dynamic, broadcast, IETF, status defined, active
+Serial0/0/0 (up): ip 10.0.0.3 dlci 103, dynamic, broadcast, IETF, status defined, active
+Ranet-HQ#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-HQ(config)#int s0/0/0
+Ranet-HQ(config-if)#sh
+
+%LINK-5-CHANGED: Interface Serial0/0/0, changed state to administratively down
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/0/0, changed state to down
+Ranet-HQ(config-if)#frame-relay map ip 10.0.0.2 102 broadcast 
+Ranet-HQ(config-if)#frame-relay map ip 10.0.0.3 103 broadcast 
+Ranet-HQ(config-if)#frame-relay map ip 10.0.0.4 104 broadcast 
+Ranet-HQ(config-if)#no sh
+
+%LINK-5-CHANGED: Interface Serial0/0/0, changed state to up
+Ranet-HQ(config-if)#
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/0/0, changed state to up
+Ranet-HQ(config-if)#
+Ranet-HQ#
+%SYS-5-CONFIG_I: Configured from console by console
+Ranet-HQ#sh frame-relay map
+Serial0/0/0 (up): ip 10.0.0.2 dlci 102, static, broadcast, IETF, status defined, active
+Serial0/0/0 (up): ip 10.0.0.3 dlci 103, static, broadcast, IETF, status defined, active
+Serial0/0/0 (up): ip 10.0.0.4 dlci 104, static, broadcast, IETF, status defined, active
+Ranet-HQ#ping 192.168.0.123
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.0.123, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 9/12/15 ms
+
+Ranet-HQ#ping 192.168.0.130
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.0.130, timeout is 2 seconds:
+.!!!!
+Success rate is 80 percent (4/5), round-trip min/avg/max = 10/12/15 ms
+
+Ranet-HQ#ping 192.168.0.140
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.0.140, timeout is 2 seconds:
+.!!!!
+Success rate is 80 percent (4/5), round-trip min/avg/max = 11/12/15 ms
+
+Ranet-HQ#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+Ranet-HQ#
+
+[On Host1] :
+(Go to Desktop Tab > Command Prompt)
+Packet Tracer PC Command Line 1.0
+PC>ping 192.168.0.123
+
+Pinging 192.168.0.123 with 32 bytes of data:
+
+Reply from 192.168.0.123: bytes=32 time=23ms TTL=126
+Reply from 192.168.0.123: bytes=32 time=16ms TTL=126
+Reply from 192.168.0.123: bytes=32 time=16ms TTL=126
+Reply from 192.168.0.123: bytes=32 time=17ms TTL=126
+
+Ping statistics for 192.168.0.123:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 16ms, Maximum = 23ms, Average = 18ms
+
+PC>ping 192.168.0.130
+
+Pinging 192.168.0.130 with 32 bytes of data:
+
+Reply from 192.168.0.130: bytes=32 time=14ms TTL=126
+Reply from 192.168.0.130: bytes=32 time=16ms TTL=126
+Reply from 192.168.0.130: bytes=32 time=19ms TTL=126
+Reply from 192.168.0.130: bytes=32 time=18ms TTL=126
+
+Ping statistics for 192.168.0.130:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 14ms, Maximum = 19ms, Average = 16ms
+
+PC>ping 192.168.0.140
+
+Pinging 192.168.0.140 with 32 bytes of data:
+
+Reply from 192.168.0.140: bytes=32 time=17ms TTL=126
+Reply from 192.168.0.140: bytes=32 time=8ms TTL=126
+Reply from 192.168.0.140: bytes=32 time=18ms TTL=126
+Reply from 192.168.0.140: bytes=32 time=15ms TTL=126
+
+Ping statistics for 192.168.0.140:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 8ms, Maximum = 18ms, Average = 14ms
+
+PC>

@@ -1,0 +1,37 @@
+<<Answer for LAB 4-7: NAT>>
+
+[On Ranet  GW (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-GW>en
+Ranet-GW#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-GW(config)#int fa0/0
+Ranet-GW(config-if)#ip nat inside
+Ranet-GW(config-if)#int s0/0/0
+Ranet-GW(config-if)#ip nat outside
+Ranet-GW(config-if)#exit
+Ranet-GW(config)#access-list 1 permit 192.168.0.192 0.0.0.15
+Ranet-GW(config)#ip nat pool Ranet 25.5.5.65 25.5.5.70 netmask 255.255.255.248
+Ranet-GW(config)#ip nat inside source list 1 pool Ranet overload 
+Ranet-GW(config)#
+Ranet-GW#
+%SYS-5-CONFIG_I: Configured from console by console
+Ranet-GW#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+Ranet-GW#
+
+[On Ranet-Host] :
+(Go to Desktop Tab > Web Browser)
+URL: www.ranet.co.th
+Output: Ranet Co.,Ltd. - Welcome to Ranet Website.
+
+[On Ranet  GW (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-GW#sh ip nat translations 
+Pro  Inside global     Inside local       Outside local      Outside global
+udp 25.5.5.65:1025     192.168.0.200:1025 21.5.6.7:53        21.5.6.7:53
+tcp 25.5.5.65:1025     192.168.0.200:1025 21.5.8.7:80        21.5.8.7:80
+
+Ranet-GW#

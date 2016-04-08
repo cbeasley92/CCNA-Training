@@ -1,0 +1,84 @@
+<<Answer for LAB 3-2: PPP-CHAP>>
+
+[On Ranet  BR1 (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-BR1>en
+Ranet-BR1#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-BR1(config)#int fa0/0
+Ranet-BR1(config-if)#no sh
+
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+Ranet-BR1(config-if)#ip add 172.20.1.206 255.255.255.240
+Ranet-BR1(config-if)#int s0/0/0
+Ranet-BR1(config-if)#no sh
+
+%LINK-5-CHANGED: Interface Serial0/0/0, changed state to down
+Ranet-BR1(config-if)#ip add 172.20.1.233 255.255.255.248
+Ranet-BR1(config-if)#encapsulation ppp
+Ranet-BR1(config-if)#ppp authentication chap
+Ranet-BR1(config-if)#exit
+Ranet-BR1(config)#username Ranet-BR2
+Ranet-BR1(config)#
+Ranet-BR1#
+%SYS-5-CONFIG_I: Configured from console by console
+Ranet-BR1#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+Ranet-BR1#
+
+[On Ranet  BR2 (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-BR2>en
+Ranet-BR2#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-BR2(config)#int fa0/0
+Ranet-BR2(config-if)#no sh
+
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+Ranet-BR2(config-if)#ip add 172.20.1.230 255.255.255.248
+Ranet-BR2(config-if)#int s0/0/0
+Ranet-BR2(config-if)#no sh
+
+%LINK-5-CHANGED: Interface Serial0/0/0, changed state to up
+Ranet-BR2(config-if)#clock rate 64000
+Ranet-BR2(config-if)#ip add 172.20.1.234 255.255.255.248
+Ranet-BR2(config-if)#encapsulation ppp
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/0/0, changed state to up
+Ranet-BR2(config-if)#ppp authentication chap
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/0/0, changed state to down
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/0/0, changed state to up
+Ranet-BR2(config-if)#exit
+Ranet-BR2(config)#username Ranet-BR1
+Ranet-BR2(config)#
+Ranet-BR2#
+%SYS-5-CONFIG_I: Configured from console by console
+Ranet-BR2#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+Ranet-BR2#
+
+[On Host1] :
+(Go to Desktop Tab > Command Prompt)
+
+Packet Tracer PC Command Line 1.0
+PC>ping 172.20.1.227
+
+Pinging 172.20.1.227 with 32 bytes of data:
+
+Request timed out.
+Reply from 172.20.1.227: bytes=32 time=16ms TTL=126
+Reply from 172.20.1.227: bytes=32 time=16ms TTL=126
+Reply from 172.20.1.227: bytes=32 time=13ms TTL=126
+
+Ping statistics for 172.20.1.227:
+    Packets: Sent = 4, Received = 3, Lost = 1 (25% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 13ms, Maximum = 16ms, Average = 15ms
+
+PC>

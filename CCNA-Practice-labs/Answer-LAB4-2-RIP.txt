@@ -1,0 +1,178 @@
+<<Answer for LAB 4-2: RIP>>
+
+[On Ranet  HQ (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-HQ>en
+Ranet-HQ#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-HQ(config)#int fa0/0
+Ranet-HQ(config-if)#no sh
+
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+Ranet-HQ(config-if)#ip add 98.83.165.65 255.255.255.248
+Ranet-HQ(config-if)#int s0/0/0
+Ranet-HQ(config-if)#no sh
+
+%LINK-5-CHANGED: Interface Serial0/0/0, changed state to down
+Ranet-HQ(config-if)#ip add 98.83.165.74 255.255.255.252
+Ranet-HQ(config-if)#int s0/1/0
+Ranet-HQ(config-if)#no sh
+
+Ranet-HQ(config-if)#
+%LINK-5-CHANGED: Interface Serial0/1/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/1/0, changed state to up
+Ranet-HQ(config-if)#ip add 52.9.236.22 255.255.255.252
+Ranet-HQ(config-if)#exit
+Ranet-HQ(config)#router rip
+Ranet-HQ(config-router)#version 2
+Ranet-HQ(config-router)#network 98.0.0.0
+Ranet-HQ(config-router)#no auto-summary 
+Ranet-HQ(config-router)#exit
+Ranet-HQ(config)#ip route 0.0.0.0 0.0.0.0 s0/1/0
+Ranet-HQ(config)#
+Ranet-HQ#
+%SYS-5-CONFIG_I: Configured from console by console
+Ranet-HQ#sh ip protocol
+Routing Protocol is "rip"
+Sending updates every 30 seconds, next due in 21 seconds
+Invalid after 180 seconds, hold down 180, flushed after 240
+Outgoing update filter list for all interfaces is not set
+Incoming update filter list for all interfaces is not set
+Redistributing: rip
+Default version control: send version 2, receive 2
+  Interface             Send  Recv  Triggered RIP  Key-chain
+  FastEthernet0/0       2     2     
+Automatic network summarization is not in effect
+Maximum path: 4
+Routing for Networks:
+	98.0.0.0
+Passive Interface(s):
+Routing Information Sources:
+	Gateway         Distance      Last Update
+Distance: (default is 120)
+Ranet-HQ#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+Ranet-HQ#
+
+[On Ranet  BR (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-BR>en
+Ranet-BR#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-BR(config)#int fa0/0
+Ranet-BR(config-if)#no sh
+
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+Ranet-BR(config-if)#ip add 98.83.165.81 255.255.255.240
+Ranet-BR(config-if)#int s0/0/0
+Ranet-BR(config-if)#no sh
+
+%LINK-5-CHANGED: Interface Serial0/0/0, changed state to up
+Ranet-BR(config-if)#clock rate 64000
+Ranet-BR(config-if)#
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/0/0, changed state to up
+Ranet-BR(config-if)#ip add 98.83.165.73 255.255.255.252
+Ranet-BR(config-if)#exit
+Ranet-BR(config)#router rip
+Ranet-BR(config-router)#version 2
+Ranet-BR(config-router)#network 98.0.0.0
+Ranet-BR(config-router)#no au
+Ranet-BR(config-router)#no auto-summary 
+Ranet-BR(config-router)#exit
+Ranet-BR(config)#ip route 0.0.0.0 0.0.0.0 se0/0/0
+Ranet-BR(config)#
+Ranet-BR#
+%SYS-5-CONFIG_I: Configured from console by console
+Ranet-BR#sh ip route
+Codes: C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
+       * - candidate default, U - per-user static route, o - ODR
+       P - periodic downloaded static route
+
+Gateway of last resort is 0.0.0.0 to network 0.0.0.0
+
+     98.0.0.0/8 is variably subnetted, 3 subnets, 3 masks
+R       98.83.165.64/29 [120/1] via 98.83.165.74, 00:00:27, Serial0/0/0
+C       98.83.165.72/30 is directly connected, Serial0/0/0
+C       98.83.165.80/28 is directly connected, FastEthernet0/0
+S*   0.0.0.0/0 is directly connected, Serial0/0/0
+Ranet-BR#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+Ranet-BR#
+
+[On Host1] :
+(Go to Desktop Tab > Command Prompt)
+
+Packet Tracer PC Command Line 1.0
+PC>ping 98.83.165.82
+
+Pinging 98.83.165.82 with 32 bytes of data:
+
+Request timed out.
+Reply from 98.83.165.82: bytes=32 time=12ms TTL=126
+Reply from 98.83.165.82: bytes=32 time=14ms TTL=126
+Reply from 98.83.165.82: bytes=32 time=6ms TTL=126
+
+Ping statistics for 98.83.165.82:
+    Packets: Sent = 4, Received = 3, Lost = 1 (25% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 6ms, Maximum = 14ms, Average = 10ms
+
+PC>ping 55.8.92.3
+
+Pinging 55.8.92.3 with 32 bytes of data:
+
+Request timed out.
+Reply from 55.8.92.3: bytes=32 time=15ms TTL=126
+Reply from 55.8.92.3: bytes=32 time=10ms TTL=126
+Reply from 55.8.92.3: bytes=32 time=14ms TTL=126
+
+Ping statistics for 55.8.92.3:
+    Packets: Sent = 4, Received = 3, Lost = 1 (25% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 10ms, Maximum = 15ms, Average = 13ms
+
+PC>
+
+[On Host2] :
+(Go to Desktop Tab > Command Prompt)
+
+Packet Tracer PC Command Line 1.0
+PC>ping 98.83.165.70
+
+Pinging 98.83.165.70 with 32 bytes of data:
+
+Reply from 98.83.165.70: bytes=32 time=13ms TTL=126
+Reply from 98.83.165.70: bytes=32 time=10ms TTL=126
+Reply from 98.83.165.70: bytes=32 time=11ms TTL=126
+Reply from 98.83.165.70: bytes=32 time=11ms TTL=126
+
+Ping statistics for 98.83.165.70:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 10ms, Maximum = 13ms, Average = 11ms
+
+PC>ping 55.8.92.3
+
+Pinging 55.8.92.3 with 32 bytes of data:
+
+Reply from 55.8.92.3: bytes=32 time=18ms TTL=125
+Reply from 55.8.92.3: bytes=32 time=20ms TTL=125
+Reply from 55.8.92.3: bytes=32 time=21ms TTL=125
+Reply from 55.8.92.3: bytes=32 time=12ms TTL=125
+
+Ping statistics for 55.8.92.3:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 12ms, Maximum = 21ms, Average = 17ms
+
+PC>

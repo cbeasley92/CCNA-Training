@@ -1,0 +1,119 @@
+<<Answer for LAB 2-1: InterVLAN Routing>>
+
+[On Ranet SW (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-SW>en
+Ranet-SW#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-SW(config)#vlan 10
+Ranet-SW(config-vlan)#vlan 20
+Ranet-SW(config-vlan)#int ran fa0/1 -2
+Ranet-SW(config-if-range)#switchport mode access 
+Ranet-SW(config-if-range)#switchport access vlan 10
+Ranet-SW(config-if-range)#spanning-tree portfast 
+%Warning: portfast should only be enabled on ports connected to a single
+ host. Connecting hubs, concentrators, switches, bridges, etc... to this
+ interface  when portfast is enabled, can cause temporary bridging loops.
+ Use with CAUTION
+
+%Portfast will be configured in 2 interfaces due to the range command
+ but will only have effect when the interfaces are in a non-trunking mode.
+Ranet-SW(config-if-range)#int ran fa0/3 -4
+Ranet-SW(config-if-range)#switchport mode access 
+Ranet-SW(config-if-range)#switchport access vlan 20
+Ranet-SW(config-if-range)#spanning-tree portfast 
+%Warning: portfast should only be enabled on ports connected to a single
+ host. Connecting hubs, concentrators, switches, bridges, etc... to this
+ interface  when portfast is enabled, can cause temporary bridging loops.
+ Use with CAUTION
+
+%Portfast will be configured in 2 interfaces due to the range command
+ but will only have effect when the interfaces are in a non-trunking mode.
+Ranet-SW(config-if-range)#int gig1/1
+Ranet-SW(config-if)#switchport mode trunk 
+Ranet-SW(config-if)#
+
+%SYS-5-CONFIG_I: Configured from console by console
+Ranet-SW#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+Ranet-SW#
+
+[On Ranet GW (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-GW>en
+Ranet-GW#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-GW(config)#int fa0/0
+Ranet-GW(config-if)#no sh
+
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+Ranet-GW(config-if)#int fa0/0.1
+Ranet-GW(config-subif)#
+%LINK-5-CHANGED: Interface FastEthernet0/0.1, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0.1, changed state to up
+Ranet-GW(config-subif)#encapsulation dot1Q 10
+Ranet-GW(config-subif)#ip add 192.168.0.142 255.255.255.240
+Ranet-GW(config-subif)#int fa0/0.2
+
+%LINK-5-CHANGED: Interface FastEthernet0/0.2, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0.2, changed state to upRanet-GW(config-subif)#en
+Ranet-GW(config-subif)#encapsulation dot1Q 20
+Ranet-GW(config-subif)#ip add 192.168.0.158 255.255.255.240
+Ranet-GW(config-subif)#
+
+%SYS-5-CONFIG_I: Configured from console by consoleRanet-GW#
+Ranet-GW#sh ip route
+Codes: C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
+       * - candidate default, U - per-user static route, o - ODR
+       P - periodic downloaded static route
+
+Gateway of last resort is not set
+
+     192.168.0.0/28 is subnetted, 2 subnets
+C       192.168.0.128 is directly connected, FastEthernet0/0.1
+C       192.168.0.144 is directly connected, FastEthernet0/0.2
+Ranet-GW#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+Ranet-GW#
+
+[On Host1] :
+(Go to Desktop Tab > Command Prompt)
+Packet Tracer PC Command Line 1.0
+PC>ping 192.168.0.145
+
+Pinging 192.168.0.145 with 32 bytes of data:
+
+Request timed out.
+Reply from 192.168.0.145: bytes=32 time=18ms TTL=127
+Reply from 192.168.0.145: bytes=32 time=14ms TTL=127
+Reply from 192.168.0.145: bytes=32 time=19ms TTL=127
+
+Ping statistics for 192.168.0.145:
+    Packets: Sent = 4, Received = 3, Lost = 1 (25% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 14ms, Maximum = 19ms, Average = 17ms
+
+PC>ping 192.168.0.146
+
+Pinging 192.168.0.146 with 32 bytes of data:
+
+Request timed out.
+Reply from 192.168.0.146: bytes=32 time=16ms TTL=127
+Reply from 192.168.0.146: bytes=32 time=12ms TTL=127
+Reply from 192.168.0.146: bytes=32 time=16ms TTL=127
+
+Ping statistics for 192.168.0.146:
+    Packets: Sent = 4, Received = 3, Lost = 1 (25% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 12ms, Maximum = 16ms, Average = 14ms
+
+PC>

@@ -1,0 +1,114 @@
+<<Answer for LAB 4-6: AccessList>>
+
+[On Ranet  HQ (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-HQ>en
+Ranet-HQ#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-HQ(config)#int fa0/0
+Ranet-HQ(config-if)#no sh
+
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up Ranet-HQ(config-if)#ip add 172.22.3.33 255.255.255.224
+Ranet-HQ(config-if)#int s0/0/0
+Ranet-HQ(config-if)#no sh
+
+Ranet-HQ(config-if)#
+%LINK-5-CHANGED: Interface Serial0/0/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/0/0, changed state to up
+Ranet-HQ(config-if)#ip add 172.22.3.98 255.255.255.252
+Ranet-HQ(config-if)#int s0/1/0
+Ranet-HQ(config-if)#no sh
+
+%LINK-5-CHANGED: Interface Serial0/1/0, changed state to up
+Ranet-HQ(config-if)#
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/1/0, changed state to up
+Ranet-HQ(config-if)#ip add 203.144.7.254 255.255.255.252
+Ranet-HQ(config-if)#exit
+Ranet-HQ(config)#router rip
+Ranet-HQ(config-router)#version 2
+Ranet-HQ(config-router)#network 172.22.0.0
+Ranet-HQ(config-router)#no auto-summary
+Ranet-HQ(config-router)#exit
+Ranet-HQ(config)#ip route 0.0.0.0 0.0.0.0 s0/1/0
+Ranet-HQ(config)#access-list 100 deny tcp 172.22.3.52 0.0.0.3 host 172.22.3.90 eq 23
+Ranet-HQ(config)#access-list 100 deny tcp host 172.22.3.53 any eq 80
+Ranet-HQ(config)#access-list 100 permit ip any any
+Ranet-HQ(config)#int fa0/0
+Ranet-HQ(config-if)#ip access-group 100 in
+Ranet-HQ(config-if)#
+Ranet-HQ#
+%SYS-5-CONFIG_I: Configured from console by console
+Ranet-HQ#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+Ranet-HQ#
+
+[On Admin-Host] :
+(Go to Desktop Tab > Command Prompt)
+
+Packet Tracer PC Command Line 1.0
+PC>telnet 172.22.3.90
+Trying 172.22.3.90 ...Open
+
+
+User Access Verification
+
+Password: ranetpass
+Ranet-CoreSW>
+(Go to Desktop Tab > Web Browser)
+URL: http://www.ranet.co.th
+Output: Ranet Co.,Ltd - Welcome to Ranet Co.,Ltd. 
+
+[On User-Host1] :
+(Go to Desktop Tab > Command Prompt)
+Packet Tracer PC Command Line 1.0
+PC>telnet 172.22.3.90
+% Connection timed out; remote host not responding
+PC>ping 172.22.3.90
+
+Pinging 172.22.3.90 with 32 bytes of data:
+
+Reply from 172.22.3.90: bytes=32 time=14ms TTL=253
+Reply from 172.22.3.90: bytes=32 time=12ms TTL=253
+Reply from 172.22.3.90: bytes=32 time=14ms TTL=253
+Reply from 172.22.3.90: bytes=32 time=16ms TTL=253
+
+Ping statistics for 172.22.3.90:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 12ms, Maximum = 16ms, Average = 14ms
+
+PC>
+
+(Go to Desktop Tab > Web Browser)
+URL: www.ranet.co.th
+Output: Request Timeout
+
+[On User-Host2] :
+(Go to Desktop Tab > Command Prompt)
+
+Packet Tracer PC Command Line 1.0
+PC>telnet 172.22.3.90
+Trying 172.22.3.90 ...
+% Connection timed out; remote host not responding
+PC>ping 172.22.3.90
+
+Pinging 172.22.3.90 with 32 bytes of data:
+
+Reply from 172.22.3.90: bytes=32 time=18ms TTL=253
+Reply from 172.22.3.90: bytes=32 time=14ms TTL=253
+Reply from 172.22.3.90: bytes=32 time=17ms TTL=253
+Reply from 172.22.3.90: bytes=32 time=13ms TTL=253
+
+Ping statistics for 172.22.3.90:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 13ms, Maximum = 18ms, Average = 15ms
+
+PC>
+
+(Go to Desktop Tab > Web Browser)
+URL: http://www.ranet.co.th
+Output: Ranet Co.,Ltd - Welcome to Ranet Co.,Ltd. 

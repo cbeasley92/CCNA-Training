@@ -1,0 +1,98 @@
+<<Answer for LAB 1-2: IPv4addressing>>
+
+[On Ranet BR (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-BR>en
+Ranet-BR#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-BR(config)#int s0/0/0
+Ranet-BR(config-if)#no sh
+
+%LINK-5-CHANGED: Interface Serial0/0/0, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/0/0, changed state to upRanet-BR(config-if)#ip add 192.168.0.253 255.255.255.252
+Ranet-BR(config-if)#int s0/1/0
+Ranet-BR(config-if)#no sh
+
+%LINK-5-CHANGED: Interface Serial0/1/0, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Serial0/1/0, changed state to up Ranet-BR(config-if)#ip add 192.168.0.29 255.255.255.252
+Ranet-BR(config-if)#int fa0/0	
+Ranet-BR(config-if)#no sh
+
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+Ranet-BR(config-if)#ip add 192.168.0.14 255.255.255.240
+Ranet-BR(config-if)#int fa0/1
+Ranet-BR(config-if)#no sh
+
+%LINK-5-CHANGED: Interface FastEthernet0/1, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/1, changed state to up Ranet-BR(config-if)#ip add 192.168.0.22 255.255.255.248
+Ranet-BR(config-if)#
+
+%SYS-5-CONFIG_I: Configured from console by consoleRanet-BR#
+Ranet-BR#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+Ranet-BR#ping 192.168.0.254
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.0.254, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 4/5/6 ms
+
+Ranet-BR#ping 192.168.0.30
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 192.168.0.30, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 3/3/5 ms
+
+Ranet-BR#
+
+[On Host1 in LAN1] :
+(Go to Desktop Tab > IP Configuration)
+IP Address: 192.168.0.1
+Subnet Mask: 255.255.255.240
+Default Gateway: 192.168.0.14
+(Go to  Desktop Tab > Command Prompt)
+Packet Tracer PC Command Line 1.0
+PC>ping 192.168.0.33
+
+Pinging 192.168.0.33 with 32 bytes of data:
+
+Reply from 192.168.0.33: bytes=32 time=12ms TTL=254
+Reply from 192.168.0.33: bytes=32 time=13ms TTL=254
+Reply from 192.168.0.33: bytes=32 time=7ms TTL=254
+Reply from 192.168.0.33: bytes=32 time=9ms TTL=254
+
+Ping statistics for 192.168.0.33:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 7ms, Maximum = 13ms, Average = 10ms
+
+PC>
+
+[On Host1 in LAN2] :
+(Go to Desktop Tab > IP Configuration)
+IP Address: 192.168.0.17
+Subnet Mask: 255.255.255.248
+Default Gateway: 192.168.0.22
+(Go to  Desktop Tab > Command Prompt)
+Packet Tracer PC Command Line 1.0
+PC>ping 192.168.0.33
+
+Pinging 192.168.0.33 with 32 bytes of data:
+
+Reply from 192.168.0.33: bytes=32 time=16ms TTL=254
+Reply from 192.168.0.33: bytes=32 time=8ms TTL=254
+Reply from 192.168.0.33: bytes=32 time=11ms TTL=254
+Reply from 192.168.0.33: bytes=32 time=7ms TTL=254
+
+Ping statistics for 192.168.0.33:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 7ms, Maximum = 16ms, Average = 10ms
+
+PC>

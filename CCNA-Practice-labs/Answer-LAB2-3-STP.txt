@@ -1,0 +1,111 @@
+<<Answer for LAB 2-3: STP>>
+
+[On Ranet Core-SW (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-CoreSW>en
+Ranet-CoreSW#sh spanning-tree 
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    32769
+             Address     0002.4A0B.19DB
+             Cost        4
+             Port        26(GigabitEthernet0/2)
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     0090.216A.C001
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  20
+
+Interface        Role Sts Cost      Prio.Nbr Type
+---------------- ---- --- --------- -------- --------------------------------
+Gi0/1            Desg FWD 4         128.25   P2p
+Gi0/2            Root FWD 4         128.26   P2p
+
+Ranet-CoreSW#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-CoreSW(config)#spanning-tree vlan 1 root primary 
+Ranet-CoreSW(config)#
+Ranet-CoreSW#
+%SYS-5-CONFIG_I: Configured from console by console
+Ranet-CoreSW#sh spanning-tree 
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    24577
+             Address     0090.216A.C001
+             This bridge is the root
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    24577  (priority 24576 sys-id-ext 1)
+             Address     0090.216A.C001
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  20
+
+Interface        Role Sts Cost      Prio.Nbr Type
+---------------- ---- --- --------- -------- --------------------------------
+Gi0/1            Desg FWD 4         128.25   P2p
+Gi0/2            Altn BLK 4         128.26   P2p
+
+Ranet-CoreSW#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+Ranet-CoreSW#
+
+[On Ranet SW3 (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-SW3>en
+Ranet-SW3#sh spanning-tree 
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    24577
+             Address     0090.216A.C001
+             Cost        4
+             Port        25(GigabitEthernet1/1)
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     0002.4A0B.19DB
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  20
+
+Interface        Role Sts Cost      Prio.Nbr Type
+---------------- ---- --- --------- -------- --------------------------------
+Gi1/1            Root FWD 4         128.25   P2p
+Fa0/1            Desg FWD 19        128.1    P2p
+
+Ranet-SW3#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-SW3(config)#spanning-tree vlan 1 priority ?
+  <0-61440>  bridge priority in increments of 4096
+Ranet-SW3(config)#spanning-tree vlan 1 priority 61440
+Ranet-SW3(config)#
+Ranet-SW3#
+%SYS-5-CONFIG_I: Configured from console by console
+Ranet-SW3#sh spanning-tree 
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    24577
+             Address     0090.216A.C001
+             Cost        4
+             Port        25(GigabitEthernet1/1)
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    61441  (priority 61440 sys-id-ext 1)
+             Address     0002.4A0B.19DB
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  20
+
+Interface        Role Sts Cost      Prio.Nbr Type
+---------------- ---- --- --------- -------- --------------------------------
+Gi1/1            Root FWD 4         128.25   P2p
+Fa0/1            Desg FWD 19        128.1    P2p
+
+Ranet-SW3#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+Ranet-SW3#
+
+(If you wait for a min, you will see the blocked port on Ranet-SW2 changed to be Fa0/2
+due to the change in sender bridge ID from Ranet-SW3.)

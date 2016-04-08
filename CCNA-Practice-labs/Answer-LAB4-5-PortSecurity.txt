@@ -1,0 +1,93 @@
+<<Answer for LAB 4-5: Port Security>>
+
+[On Ranet  SW (via console)] :
+(Go to Desktop Tab > Terminal)
+Ranet-SW>en
+Ranet-SW#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+Ranet-SW(config)#int ran fa0/1 -24
+Ranet-SW(config-if-range)#switchport mode access 
+Ranet-SW(config-if-range)#switchport port-security 
+Ranet-SW(config-if-range)#switchport port-security maximum 1
+Ranet-SW(config-if-range)#switchport port-security violation shutdown 
+Ranet-SW(config-if-range)#int fa0/1
+Ranet-SW(config-if)#switchport port-security mac-address sticky 
+Ranet-SW(config-if)#int fa0/3
+Ranet-SW(config-if)#switchport port-security mac-address 0030.F295.15C6
+Ranet-SW(config-if)#
+
+%SYS-5-CONFIG_I: Configured from console by consoleRanet-SW#
+Ranet-SW#copy run start
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+Ranet-SW#
+
+[On Host1] :
+(Go to Desktop Tab > Command Prompt)
+
+Packet Tracer PC Command Line 1.0
+PC>ping 192.168.0.60
+
+Pinging 192.168.0.60 with 32 bytes of data:
+
+Reply from 192.168.0.60: bytes=32 time=44ms TTL=128
+Reply from 192.168.0.60: bytes=32 time=4ms TTL=128
+Reply from 192.168.0.60: bytes=32 time=5ms TTL=128
+Reply from 192.168.0.60: bytes=32 time=4ms TTL=128
+
+Ping statistics for 192.168.0.60:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 4ms, Maximum = 44ms, Average = 14ms
+
+PC>ping 192.168.0.59
+
+Pinging 192.168.0.59 with 32 bytes of data:
+
+Request timed out.
+Request timed out.
+Request timed out.
+Request timed out.
+
+Ping statistics for 192.168.0.59:
+    Packets: Sent = 4, Received = 0, Lost = 4 (100% loss),
+
+PC>ping 192.168.0.58
+
+Pinging 192.168.0.58 with 32 bytes of data:
+
+Request timed out.
+Request timed out.
+Request timed out.
+Request timed out.
+
+Ping statistics for 192.168.0.58:
+    Packets: Sent = 4, Received = 0, Lost = 4 (100% loss),
+
+PC>
+(Now you should see port Fa0/2 changed status to down due to sender MAC addresses exceed maximum,
+port Fa0/3 changed status to down due to incorrect sender MAC address.)
+
+[On Ranet  SW (via console)] :
+(Go to Desktop Tab > Terminal)
+%LINK-5-CHANGED: Interface FastEthernet0/2, changed state to administratively down
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/2, changed state to down
+%LINK-5-CHANGED: Interface FastEthernet0/3, changed state to administratively down
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/3, changed state to down
+Ranet-SW#sh port-security address 
+			Secure Mac Address Table
+-------------------------------------------------------------------------------
+Vlan	Mac Address	Type			Ports		Remaining Age
+								(mins)
+----	-----------	----			-----		-------------
+1	0030.F214.8793	SecureSticky		FastEthernet0/1		-
+1	0030.F295.15C6	SecureConfigured	FastEthernet0/3		-
+------------------------------------------------------------------------------
+Total Addresses in System (excluding one mac per port)     : 0
+Max Addresses limit in System (excluding one mac per port) : 1024
+Ranet-SW#sh int fa0/2
+FastEthernet0/2 is down, line protocol is down (err-disabled)
+<Output is omitted>
+Ranet-SW#sh int fa0/3
+FastEthernet0/3 is down, line protocol is down (err-disabled)
